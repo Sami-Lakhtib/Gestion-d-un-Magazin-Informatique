@@ -1,6 +1,6 @@
 # GESTION DE MAGAZIN INFORMATIQUE
 
-_Ce projet vise a simuler le fonctionnement d'un magazin informatique. En s'appuiant sur 2 technologies principales:_
+_Ce projet vise a simuler le fonctionnement d'un magazin informatique en s'appuiant sur 2 technologies principales:_
 
 **- Python3 (Programmation)**
 **- sqlite3 (Base de donnees)**
