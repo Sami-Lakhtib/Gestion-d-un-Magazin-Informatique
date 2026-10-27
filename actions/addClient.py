@@ -26,7 +26,7 @@ def save_client(window: tkinter.Tk, vars: list[tkinter.StringVar], cursor):
             errorString += "-Prenom invalide\n"
         if (not tel) or len(tel) != 12:
             errorString += "-Numero de telephone invalide. (XXX YYY YYY YYY).\n"
-        if (not mail) or not mail.find("@"):
+        if (not mail) or mail.find("@") == -1:
             errorString += "-Adresse e-mail invalide\n"
         if not ad:
             errorString += "-Adresse invalide\n"
