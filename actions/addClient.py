@@ -41,10 +41,11 @@ def save_client(window: tkinter.Tk, vars: list[tkinter.StringVar], cursor):
             successLabel.pack(anchor='center', pady=(10, 0))
             window.after(2000, window.destroy)
         
-def main(cursor):  
+def main(parent_window, cursor):  
 
 
-    window = tkinter.Tk("Magazin Informatique")
+    window = tkinter.Toplevel(parent_window)
+    window.title("Ajout de client")
     window.geometry("700x600")
     window.minsize(700, 600)
     window.maxsize(700, 600)

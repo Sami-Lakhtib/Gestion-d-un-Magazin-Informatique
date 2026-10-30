@@ -6,8 +6,9 @@ from sqlite3 import Cursor
 
 product_fields = ["id", "nom", "categorie", "prix d'achat", "prix de vente", "quantite en stock", "seuil d'alerte", "description"]
 
-def main(cursor: Cursor):
-    window = tkinter.Tk("Catalog")
+def main(parent_window, cursor: Cursor):
+    window = tkinter.Toplevel(parent_window)
+    window.title("Catalogue")
     window.geometry("700x700")
     window.resizable(True, True)
     

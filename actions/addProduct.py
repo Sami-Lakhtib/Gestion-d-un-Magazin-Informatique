@@ -48,10 +48,11 @@ def save_product(window: tkinter.Tk, vars: list[tkinter.StringVar], cursor):
             successLabel.pack(anchor='center', pady=(10, 0))
             window.after(2000, window.destroy)
         
-def main(cursor):  
+def main(parent_window, cursor):  
 
 
-    window = tkinter.Tk("Magazin Informatique")
+    window = tkinter.Toplevel(parent_window)
+    window.title("Ajout de produit")
     window.geometry("700x700")
     window.minsize(700, 700)
     window.maxsize(700, 700)

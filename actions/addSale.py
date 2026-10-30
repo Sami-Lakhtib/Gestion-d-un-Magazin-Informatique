@@ -66,9 +66,10 @@ def save_sale(window: tkinter.Tk, inputs: list[tkinter.StringVar], cursor: Curso
 
 
 
-def main(cursor: Cursor):
+def main(parent_window, cursor: Cursor):
     
-    window = tkinter.Tk("Magazin Informatique")
+    window = tkinter.Toplevel(parent_window)
+    window.title("Enregistrement de vente")
     window.geometry("700x700")
     window.minsize(700, 700)
     window.maxsize(700, 700)
