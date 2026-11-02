@@ -1,37 +1,46 @@
 import tkinter as tk
 
-from ui.widgets import afficher_message
+from ui.widgets import afficher_message, creer_liste_deroulante
 
 WIDGET_WIDTH = 50
-PRODUCT, CLIENT, QUANTITY = range(3)
 
 
 def ouvrir_ajout_vente(parent_window, services):
     window = tk.Toplevel(parent_window)
     window.title("Enregistrement de vente")
-    window.geometry("700x700")
-    window.minsize(700, 700)
-    window.maxsize(700, 700)
+    window.geometry("700x500")
+    window.minsize(700, 500)
+    window.maxsize(700, 500)
 
-    inputs = [tk.StringVar() for _ in range(3)]
+    noms_produits = [produit.nom for produit in services.produits.lister()]
+    produit_var = tk.StringVar()
+    client_var = tk.StringVar()
+    quantite_var = tk.StringVar()
 
-    tk.Label(window, text="Naviguez le catalogue").pack(anchor="center")
+    tk.Label(window, text="Enregistrement de vente").pack(pady=(10, 40))
 
-    tk.Label(window, text="Nom de produit:", width=WIDGET_WIDTH, anchor="w").pack(anchor="center", pady=(10, 10))
-    tk.Entry(window, textvariable=inputs[PRODUCT], width=WIDGET_WIDTH).pack(anchor="center", pady=(0, 10))
+    tk.Label(window, text="Produit:", width=WIDGET_WIDTH, anchor="w").pack(anchor="center")
+    if noms_produits:
+        creer_liste_deroulante(window, noms_produits, produit_var, width=WIDGET_WIDTH).pack(pady=(0, 20))
+    else:
+        tk.Label(window, text="Aucun produit enregistre.", fg="red").pack(pady=(0, 20))
 
-    tk.Label(window, text="Adresse e-mail du client:", width=WIDGET_WIDTH, anchor="w").pack(anchor="center", pady=(10, 10))
-    tk.Entry(window, textvariable=inputs[CLIENT], width=WIDGET_WIDTH).pack(anchor="center", pady=(0, 10))
+    tk.Label(window, text="Adresse e-mail du client:", width=WIDGET_WIDTH, anchor="w").pack(anchor="center")
+    tk.Entry(window, textvariable=client_var, width=WIDGET_WIDTH).pack(pady=(0, 20))
 
-    tk.Label(window, text="Quantite:", width=WIDGET_WIDTH, anchor="w").pack(anchor="center", pady=(10, 10))
-    tk.Entry(window, textvariable=inputs[QUANTITY], width=WIDGET_WIDTH).pack(anchor="center", pady=(0, 10))
+    tk.Label(window, text="Quantite:", width=WIDGET_WIDTH, anchor="w").pack(anchor="center")
+    tk.Entry(window, textvariable=quantite_var, width=WIDGET_WIDTH).pack(pady=(0, 20))
 
     def confirmer():
-        quantite_texte = inputs[QUANTITY].get().strip()
+        if not noms_produits:
+            afficher_message(window, "-Aucun produit enregistre.")
+            return
+
+        quantite_texte = quantite_var.get().strip()
         quantite = int(quantite_texte) if quantite_texte.isdigit() else None
         erreurs = services.ventes.enregistrer(
-            inputs[PRODUCT].get().strip(),
-            inputs[CLIENT].get().strip(),
+            produit_var.get().strip(),
+            client_var.get().strip(),
             quantite,
         )
         if erreurs:

@@ -1,4 +1,18 @@
 import tkinter as tk
+from tkinter import ttk
+
+
+def creer_liste_deroulante(parent, valeurs, variable, width=50):
+    combo = ttk.Combobox(
+        parent,
+        textvariable=variable,
+        values=valeurs,
+        state="readonly",
+        width=width,
+    )
+    if valeurs:
+        combo.current(0)
+    return combo
 
 
 def afficher_tableau(parent, colonnes, lignes, couleur_ligne=None):
