@@ -1,12 +1,9 @@
+import os
 import sqlite3
 
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "magazin.db")
 
-conn = sqlite3.connect("magazin.db")
-conn.row_factory = sqlite3.Row
-
-cursor = conn.cursor()
-
-cursor.executescript("""
+SCHEMA = """
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS client(
@@ -38,4 +35,18 @@ CREATE TABLE IF NOT EXISTS vente(
     prix_unitaire REAL NOT NULL,
     montant_total REAL NOT NULL
 );
-""") 
+"""
+
+
+class Database:
+    def __init__(self, path=DB_PATH):
+        self.conn = sqlite3.connect(path)
+        self.conn.row_factory = sqlite3.Row
+        self.conn.execute("PRAGMA foreign_keys = ON")
+        self.conn.executescript(SCHEMA)
+
+    def commit(self):
+        self.conn.commit()
+
+    def close(self):
+        self.conn.close()
