@@ -1,0 +1,264 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\geometry{margin=2.3cm}
+\definecolor{ensamblue}{RGB}{0,51,102}
+\definecolor{ensamgold}{RGB}{184,148,62}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=ensamblue,
+    urlcolor=ensamblue
+}
+\setlist[itemize]{topsep=3pt, itemsep=2pt}
+\titleformat{\section}{\large\bfseries\color{ensamblue}}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\repo}{\url{https://github.com/Sami-Lakhtib/Gestion-d-un-Magazin-Informatique}}
+
+\begin{document}
+
+\begin{titlepage}
+    \thispagestyle{empty}
+    \centering
+
+    {\color{ensamblue}\rule{\textwidth}{3pt}}\\[0.35cm]
+    {\color{ensamgold}\rule{\textwidth}{1pt}}\\[0.9cm]
+
+    {\large\bfseries Université Hassan~II de Casablanca}\\[0.35cm]
+    {\Large\bfseries École Nationale Supérieure d'Arts et Métiers}\\[0.15cm]
+    {\large ENSAM -- Casablanca}\\[0.7cm]
+    {\large Département Génie Informatique}\\[0.15cm]
+    {\normalsize 1\textsuperscript{re} année du cycle d'ingénieur}\\[0.1cm]
+    {\normalsize Intelligence Artificielle et Génie Informatique (IAGI)}\\[0.8cm]
+
+    {\color{ensamgold}\rule{0.55\textwidth}{0.8pt}}\\[1.1cm]
+
+    {\large\scshape Rapport de projet}\\[0.25cm]
+    {\normalsize Module : Python avancé}\\[1.1cm]
+
+    {\Huge\bfseries\color{ensamblue} Gestion d'un magasin}\\[0.25cm]
+    {\Huge\bfseries\color{ensamblue} informatique}\\[0.55cm]
+    {\Large Application de gestion de stock}\\[1.3cm]
+
+    {\color{ensamgold}\rule{0.55\textwidth}{0.8pt}}\\[1.3cm]
+
+    \begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
+        \textbf{Réalisé par} & Ennaji Aymen \\
+                             & Sami Lakhtib \\
+                             & Mohamed Amine Erraghay \\[0.7cm]
+        \textbf{Encadré par} & M.~Mustapha Hain \\
+    \end{tabular}\\[1.6cm]
+
+    {\normalsize Dépôt du projet}\\[0.15cm]
+    {\small \repo}\\[1.4cm]
+
+    {\large\bfseries Année universitaire 2026/2027}
+
+    \vfill
+    {\color{ensamgold}\rule{\textwidth}{1pt}}\\[0.2cm]
+    {\color{ensamblue}\rule{\textwidth}{3pt}}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+Ce rapport présente une application de bureau destinée à la gestion de stock d'un magasin informatique. Elle permet d'enregistrer des clients et des produits, de suivre les quantités disponibles, d'enregistrer des ventes et de signaler les articles dont le stock devient trop bas.
+
+Le sujet reste volontairement à l'échelle d'un projet de module. L'application fonctionne en local, avec une interface graphique et une base SQLite de trois tables. L'accent est mis sur une organisation du code lisible : l'affichage, les règles du magasin et les requêtes SQL sont séparés.
+
+Le code source est disponible à l'adresse suivante :
+
+\begin{center}
+\repo
+\end{center}
+
+\section{Objectifs}
+
+Le travail répond à quatre objectifs :
+
+\begin{itemize}
+    \item modéliser un stock simple avec les entités client, produit et vente ;
+    \item mettre à jour automatiquement la quantité lors d'une vente ou d'un réapprovisionnement ;
+    \item avertir l'utilisateur lorsqu'un produit atteint son seuil d'alerte ;
+    \item structurer le programme en couches, afin que chaque partie ait un rôle précis.
+\end{itemize}
+
+\section{Outils utilisés}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Outil} & \textbf{Rôle} \\
+\midrule
+Python 3 & Langage du programme \\
+Tkinter & Interface graphique \\
+SQLite & Base de données locale (\texttt{magazin.db}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Ces trois outils appartiennent à la bibliothèque standard de Python. Le projet ne dépend d'aucun paquet à installer. L'interface est un tableau de bord : chaque bouton ouvre une fenêtre pour une action précise.
+
+\section{Base de données}
+
+La contrainte retenue pour le projet est de n'utiliser que trois tables.
+
+\subsection{Table \texttt{client}}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Colonne} & \textbf{Type} & \textbf{Contrainte} \\
+\midrule
+\texttt{id\_client} & entier & clé primaire \\
+\texttt{nom}, \texttt{prenom} & texte & obligatoires \\
+\texttt{telephone} & texte & 12 chiffres, contrôlé par l'application \\
+\texttt{email} & texte & unique et obligatoire \\
+\texttt{adresse} & texte & obligatoire \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Table \texttt{produit}}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Colonne} & \textbf{Rôle} \\
+\midrule
+\texttt{id\_produit} & Clé primaire \\
+\texttt{nom} & Nom unique du produit \\
+\texttt{categorie} & Famille (ordinateurs, périphériques, etc.) \\
+\texttt{prix\_achat}, \texttt{prix\_vente} & Coût et prix de vente \\
+\texttt{quantite\_stock} & Quantité actuellement disponible \\
+\texttt{seuil\_alerte} & Seuil à partir duquel le produit est signalé \\
+\texttt{description} & Court descriptif \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Table \texttt{vente}}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Colonne} & \textbf{Type} & \textbf{Contrainte} \\
+\midrule
+\texttt{id\_vente} & entier & clé primaire \\
+\texttt{id\_client} & entier & clé étrangère vers \texttt{client} \\
+\texttt{id\_produit} & entier & clé étrangère vers \texttt{produit} \\
+\texttt{quantite} & entier & obligatoire \\
+\texttt{date\_vente} & texte & obligatoire \\
+\texttt{prix\_unitaire} & réel & obligatoire \\
+\texttt{montant\_total} & réel & obligatoire \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Chaque ligne représente la vente d'un seul produit à un client. Elle mémorise la quantité, la date, le prix unitaire au moment de la vente et le montant total. Les colonnes \texttt{id\_client} et \texttt{id\_produit} relient la vente aux deux autres tables.
+
+Le stock courant reste dans \texttt{produit}. Une vente le diminue ; un réapprovisionnement l'augmente. Les sorties déjà réalisées restent consultables dans \texttt{vente}.
+
+Un produit est considéré en alerte lorsque :
+\[
+\text{quantité en stock} \le \text{seuil d'alerte}.
+\]
+
+\section{Architecture}
+
+Le programme suit trois couches. L'interface ne contient pas de requête SQL, et les règles de gestion ne sont pas écrites dans les fenêtres.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Couche} & \textbf{Dossier} & \textbf{Responsabilité} \\
+\midrule
+Interface & \texttt{ui/} & Fenêtres, boutons, listes déroulantes, messages \\
+Métier & \texttt{services/} & Validation, calcul du montant, mise à jour du stock, alertes \\
+Données & \texttt{repositories/} & \texttt{INSERT}, \texttt{SELECT} et \texttt{UPDATE} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Les objets \texttt{Client}, \texttt{Produit} et \texttt{Vente} sont décrits dans \texttt{models/}. Le fichier \texttt{database.py} ouvre la connexion et crée les tables si elles n'existent pas. \texttt{main.py} se limite au démarrage : il crée la base, les services, puis le tableau de bord.
+
+Toute action suit le même chemin :
+\[
+\text{fenêtre} \rightarrow \text{service} \rightarrow \text{repository} \rightarrow \texttt{magazin.db}.
+\]
+
+Cette séparation rend le projet plus simple à expliquer et à modifier. Ajouter un écran consiste à appeler un service déjà existant, sans réécrire le SQL dans l'interface.
+
+\section{Fonctionnalités}
+
+\begin{itemize}
+    \item \textbf{Ajouter un client.} Nom, prénom, téléphone, e-mail et adresse. Le téléphone doit compter 12 chiffres et l'e-mail doit contenir un arobase. Un e-mail déjà présent est refusé.
+    \item \textbf{Ajouter un produit.} Nom, catégorie, prix, stock initial, seuil d'alerte et description. Le nom doit être unique.
+    \item \textbf{Réapprovisionner.} L'utilisateur choisit un produit dans une liste déroulante et saisit la quantité à ajouter. Le stock est augmenté, puis les alertes du tableau de bord sont recalculées.
+    \item \textbf{Enregistrer une vente.} Le produit est choisi dans la même liste. L'application vérifie le client, la quantité et le stock disponible, puis enregistre la vente et retire la quantité vendue.
+    \item \textbf{Catalogue.} Tableau de tous les produits. Une ligne dont le stock est inférieur ou égal au seuil est affichée en rouge.
+    \item \textbf{Liste des ventes.} Date, client, e-mail, produit, quantité, prix unitaire et total, obtenus par une jointure des trois tables.
+    \item \textbf{Alertes du tableau de bord.} Liste des produits concernés, mise à jour au retour de chaque fenêtre.
+\end{itemize}
+
+\section{Exemple : enregistrer une vente}
+
+\begin{enumerate}[leftmargin=1.4em]
+    \item L'utilisateur ouvre \og Enregistrer une vente \fg{} et choisit un produit.
+    \item Il saisit l'e-mail du client et la quantité.
+    \item Le service recherche le produit et le client.
+    \item Si le produit ou le client est inconnu, si la quantité est invalide, ou si elle dépasse le stock, un message d'erreur s'affiche et rien n'est enregistré.
+    \item Sinon, une ligne est ajoutée dans \texttt{vente}, avec la date du jour et le montant \(\text{quantité} \times \text{prix de vente}\).
+    \item Le stock du produit est diminué de la quantité vendue, puis la transaction est validée.
+    \item Au retour sur le tableau de bord, la liste des alertes est reconstruite.
+\end{enumerate}
+
+Le prix unitaire est recopié dans la vente. Une modification ultérieure du prix du produit ne change donc pas le montant des ventes déjà passées.
+
+\section{Lancement}
+
+Depuis le dossier du projet :
+
+\begin{verbatim}
+python init_db.py
+python main.py
+\end{verbatim}
+
+\texttt{init\_db.py} crée un jeu de démonstration : 6 clients, 10 produits et 6 ventes. L'un des produits, la clé USB, est volontairement sous son seuil afin de voir l'alerte dès le premier lancement. Relancer ce script efface les saisies et rétablit ces données.
+
+Le code et ce rapport se trouvent sur le dépôt GitHub du projet :
+
+\begin{center}
+\repo
+\end{center}
+
+\section{Limites}
+
+L'application couvre le cycle utile d'un petit stock, dans le cadre fixé pour le module. Quelques choix en découlent :
+
+\begin{itemize}
+    \item une vente concerne un seul produit à la fois ;
+    \item il n'y a pas de compte utilisateur ni de rôle ;
+    \item l'historique détaillé des entrées de stock n'est pas une table à part : seul le stock courant et les ventes sont conservés ;
+    \item les prix saisis dans le formulaire produit sont des nombres entiers.
+\end{itemize}
+
+\section{Conclusion}
+
+Le projet réalise une gestion de stock locale pour un magasin informatique : clients, catalogue, ventes, réapprovisionnement et alertes de seuil. La base reste limitée à trois tables, conformément au cadre du travail. La séparation entre interface, services et accès aux données permet de suivre clairement le traitement d'une vente, de la fenêtre jusqu'à SQLite.
+
+\end{document}
