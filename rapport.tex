@@ -11,6 +11,8 @@
 \usepackage{titlesec}
 \usepackage{xcolor}
 \usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{float}
 
 \geometry{margin=2.3cm}
 \definecolor{ensamblue}{RGB}{0,51,102}
@@ -48,16 +50,16 @@
     {\large\scshape Rapport de projet}\\[0.25cm]
     {\normalsize Module : Python avancé}\\[1.1cm]
 
-    {\Huge\bfseries\color{ensamblue} Gestion d'un magasin}\\[0.25cm]
-    {\Huge\bfseries\color{ensamblue} informatique}\\[0.55cm]
-    {\Large Application de gestion de stock}\\[1.3cm]
+    {\Huge\bfseries\color{ensamblue} Application de gestion de stock}\\[0.25cm]
+    {\Huge\bfseries\color{ensamblue} d'un magasin informatique}\\[1.55cm]
 
-    {\color{ensamgold}\rule{0.55\textwidth}{0.8pt}}\\[1.3cm]
+
+    {\color{ensamgold}\rule{0.55\textwidth}{0.8pt}}\\[1cm]
 
     \begin{tabular}{@{}r@{\hspace{1.2em}}l@{}}
         \textbf{Réalisé par} & Ennaji Aymen \\
-                             & Sami Lakhtib \\
-                             & Mohamed Amine Erraghay \\[0.7cm]
+                             & Lakhtib Sami \\
+                             & Erraghay Mohamed Amine \\[0.7cm]
         \textbf{Encadré par} & M.~Mustapha Hain \\
     \end{tabular}\\[1.6cm]
 
@@ -158,16 +160,17 @@ La contrainte retenue pour le projet est de n'utiliser que trois tables.
 \toprule
 \textbf{Colonne} & \textbf{Type} & \textbf{Contrainte} \\
 \midrule
-\texttt{id\_vente} & entier & clé primaire \\
-\texttt{id\_client} & entier & clé étrangère vers \texttt{client} \\
-\texttt{id\_produit} & entier & clé étrangère vers \texttt{produit} \\
-\texttt{quantite} & entier & obligatoire \\
-\texttt{date\_vente} & texte & obligatoire \\
-\texttt{prix\_unitaire} & réel & obligatoire \\
-\texttt{montant\_total} & réel & obligatoire \\
+\texttt{id\_vente} & entier & Clé primaire \\
+\texttt{id\_client} & entier & Clé étrangère vers \texttt{client} \\
+\texttt{id\_produit} & entier & Clé étrangère vers \texttt{produit} \\
+\texttt{quantite} & entier & quantite vendu \\
+\texttt{date\_vente} & texte & date de vente \\
+\texttt{prix\_unitaire} & réel & prix d'une seul entite \\
+\texttt{montant\_total} & réel & montant total de la vente \\
 \bottomrule
 \end{tabular}
 \end{center}
+
 
 Chaque ligne représente la vente d'un seul produit à un client. Elle mémorise la quantité, la date, le prix unitaire au moment de la vente et le montant total. Les colonnes \texttt{id\_client} et \texttt{id\_produit} relient la vente aux deux autres tables.
 
@@ -215,6 +218,44 @@ Cette séparation rend le projet plus simple à expliquer et à modifier. Ajoute
     \item \textbf{Alertes du tableau de bord.} Liste des produits concernés, mise à jour au retour de chaque fenêtre.
 \end{itemize}
 
+\subsection{Illustrations de l'interface}
+
+Le tableau de bord constitue le point d'entrée de l'application. Il regroupe les actions disponibles et affiche immédiatement les produits dont le stock est inférieur ou égal au seuil d'alerte.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{images/tableau_de_bord.png}
+    \caption{Tableau de bord principal et alerte de stock}
+\end{figure}
+\newpage
+Les écrans suivants présentent les principales opérations de gestion du stock : l'ajout d'un produit, le réapprovisionnement et la consultation du catalogue.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{images/ajout_produit.png}
+    \caption{Formulaire d'ajout d'un produit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{images/reapprovisionnement.png}
+    \caption{Formulaire de réapprovisionnement du stock}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/catalogue.png}
+    \caption{Catalogue des produits avec signalement des stocks faibles}
+\end{figure}
+
+Enfin, la liste des ventes permet de consulter l'historique des opérations enregistrées avec le client, le produit, la quantité, le prix unitaire et le montant total.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/liste_ventes.png}
+    \caption{Liste des ventes enregistrées}
+\end{figure}
+
 \section{Exemple : enregistrer une vente}
 
 \begin{enumerate}[leftmargin=1.4em]
@@ -245,7 +286,7 @@ Le code et ce rapport se trouvent sur le dépôt GitHub du projet :
 \begin{center}
 \repo
 \end{center}
-
+\newpage
 \section{Limites}
 
 L'application couvre le cycle utile d'un petit stock, dans le cadre fixé pour le module. Quelques choix en découlent :
